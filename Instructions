@@ -1,0 +1,91 @@
+This assignment involves maintaining a File Allocation Table.
+
+We will simulate "FAT-12" on a (very small) disk.  Each cluster 
+will be 512 bytes in size.  With FAT-12, we have 4096 clusters, so the disk is only 8 MB in size.
+
+Starting with an empty root directory, we will carry out a series of transactions.  From time to time we will print the contents of the directory and (part) of the FAT.  
+
+Write a program in C or C++ on the hopper system to accomplish this.  Designing your program is largely up to you.
+
+----------------------------------------------------------------
+
+Input File
+
+The data in the input file is in lines.  Each line begins with 1 letter indicating the type of transaction involved.  After that are
+more items (file name, file size) as described below.
+
+The file ends with a line starting with '?'.  This is present as a delimiter.  
+
+The file can be found here:
+
+/home/turing/t90hch1/csci480/Assign7/data7.txt
+
+----------------------------------------------------------------
+
+What to do
+
+The main loop of the program does the following:
+
+Read the letter indicating which transaction is next.  After that, depending on the kind of transaction, read the rest of the data for
+that transaction.
+
+Type 'C':  Copy File transaction.  The line also contains the file
+name and the name of the new file.
+
+Search for the file name.  If it does not exist, we have an error.
+Search for the new file name.  If it already exists, we have an error.  Create a new directory entry with the new name and the same size and then allocate space for it.
+
+Type 'D':  Delete transaction.  The line also contains the file name.
+Search for the file name.  If it does not exist, we have an error.
+Remove the directory entry for this file and deallocate the space
+it was using.
+
+Type 'N':  New File transaction.  The line also contains the file
+name and the file size.
+
+Search for the file name.  If it already exists, we have an error.
+Create a directory entry with this name and size and then allocate
+space for it.
+
+Type 'M':  Modify File transaction.  The line also contains the 
+file name and the new file size.
+
+Search for the file name.  If it does not exist, we have an error.
+If more clusters are needed, allocate it.  If the number of clusters
+needed is the same, do nothing.  If the number of clusters is smaller, deallocate the leftover clusters.
+
+Type 'R':  Rename File transaction.  The file also contains the
+old file name and the new file name.
+
+Search for the old file name.  If it does not exist, we have an error.  Search for the new file name.  If it already exists, we have an error.  Change the name.
+
+----------------------------------------------------------------
+
+Stuff you will probably need
+
+You will need a table of short integers to be the FAT itself, all
+initialized to 0.
+
+You will need a data structure to contain the directory entries.
+I suggest defining a class or struct called Entry and then having a
+linked list or array (or whatever) of Entry instances.  Maintain the order (chronological) of the entries.
+
+Define a constant to represent the value 512, the number of bytes in
+a cluster.
+
+Define a constant called HOWOFTEN with the value 6.
+
+Define a constant to represent 12, the maximum number of entries in a directory cluster.
+
+You may want to define a constant to indicate how much of the FAT
+to print each time.  The eventual value should be 300, but it may be 
+convenient to use small values for this constant and for HOWOFTEN
+in developing your program.
+
+You may want to define a function for each kind of transaction and perhaps use a switch statement.  You will also need functions to print the directory and the FAT.  You may also need an assortment of little utility functions for purposes such as:
+
+-- searching for a file name in the directory
+-- deciding how many clusters a file needs, based on its size
+-- finding the first free cluster
+-- finding the last cluster used by a file
+
